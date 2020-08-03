@@ -14,78 +14,253 @@ from models import *
 
 def create_app(test_config=None):
 
-  # create and configure the app
-  app = Flask(__name__)
-  setup_db(app)  
-  cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+    # create and configure the app
+    app = Flask(__name__)
+    setup_db(app)  
+    cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-  # CORS Headers 
-  @app.after_request
-  def after_request(response):
-    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,true')
-    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
-    return response
+    # CORS Headers 
+    @app.after_request
+    def after_request(response):
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,true')
+        response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+        return response
 
 
 
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ endpoints ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
 
-  @app.route('/', methods=['GET'])
-  def home():
-    
-      return jsonify({
-          'success': True,
-          'Wellcome': "Wellcome",
-      })
+    @app.route('/', methods=['GET'])
+    def home():
+        
+        return jsonify({
+            'success': True,
+            'Wellcome': "Wellcome",
+        })
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
+    @app.route('/actors', methods=['GET'])
+    def retrive_actors():
+
+        all_actors = Actor.query.order_by(Actor.id).all()
+
+        formatted_actors = [Actor.format() for Actor in all_actors]
+
+        if len(formatted_actors) == 0:
+            abort(404)
+
+        return jsonify({
+            'success': True,
+            'Actors': formatted_actors,
+            'total_Actors': len(formatted_actors),
+        })
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
+    @app.route('/actors' , methods=['POST'])
+    def add_actor():
+
+        body = request.get_json()
+
+        new_name = body.get('name', None)
+        new_age = body.get('age', None)
+        new_gender = body.get('gender', None)
+
+        actor = Actor(name=new_name ,age=new_age , gender=new_gender)
+        actor.insert()
+
+        all_actors = Actor.query.order_by(Actor.id).all()
+        formatted_actors = [Actor.format() for Actor in all_actors]
+
+        return jsonify({
+            'success': True,
+            'Actors': formatted_actors,
+            'total_Actors': len(formatted_actors),
+        })
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
+    @app.route('/actors/<int:actor_id>' , methods=['PATCH'])
+    def edit_actor(actor_id):
+
+        actor = Actor.query.get(actor_id)
+
+        if actor is None:
+            abort(404)
+
+        body = request.get_json()
+
+        new_name = body.get('name', None)
+        new_age = body.get('age', None)
+        new_gender = body.get('gender', None)
+
+        if new_name is not None:
+            actor.name = new_name
+
+        if new_age is not None:
+            actor.age = new_age
+            
+        if new_gender is not None:
+            actor.gender = new_gender
+
+        actor.update()
+
+        return jsonify({
+            'success': True,
+            'Actor': actor.format()
+        })
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
+    @app.route('/actors/<int:actor_id>', methods=['DELETE'])
+    def delete_actor(actor_id):
+
+        actor = Actor.query.get(actor_id)
+
+        if actor is None:
+            abort(404)
+
+        actor.delete()
+
+        return jsonify({
+            'success': True,
+            'Deleted_Actor': actor.format()
+        })
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
+    @app.route('/movies', methods=['GET'])
+    def retrive_movies():
+
+        all_movies = Movie.query.order_by(Movie.id).all()
+
+        formatted_movies = [Movie.format() for Movie in all_movies]
+
+        if len(formatted_movies) == 0:
+            abort(404)
+
+        return jsonify({
+            'success': True,
+            'Movies': formatted_movies,
+            'total_Movies': len(formatted_movies),
+        })
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
+    @app.route('/movies', methods=['POST'])
+    def add_movie():
+
+        body = request.get_json()
+
+        new_title = body.get('title', None)
+        new_release_date = body.get('release_date', None)
+
+        movie = Movie(title=new_title ,release_date=new_release_date)
+        movie.insert()
+
+        all_movies = Movie.query.order_by(Movie.id).all()
+        formatted_movies = [Movie.format() for Movie in all_movies]
+        
+        return jsonify({
+            'success': True,
+            'movies': formatted_movies,
+            'total_movies': len(formatted_movies),
+        })
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
+    @app.route('/movies/<int:movie_id>' , methods=['PATCH'])
+    def edit_movie(movie_id):
+
+        movie = Movie.query.get(movie_id)
+
+        if movie is None:
+            abort(404)
+
+        body = request.get_json()
+
+        new_title = body.get('title', None)
+        new_release_date = body.get('release_date', None)
+
+        if new_title is not None:
+            movie.title = new_title
+
+        if new_release_date is not None:
+            movie.release_date = new_release_date
+            
+        movie.update()
+
+        return jsonify({
+            'success': True,
+            'Movie': movie.format()
+        })
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
+    @app.route('/movies/<int:movie_id>', methods=['DELETE'])
+    def delete_movie(movie_id):
+
+        movie = Movie.query.get(movie_id)
+
+        if movie is None:
+            abort(404)
+
+        movie.delete()
+
+        return jsonify({
+            'success': True,
+            'Deleted_Movie': movie.format()
+        })
 
 
 
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Error Handlers ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
-  @app.errorhandler(404)
-  def not_found(error):
-      return jsonify({
-          'success': False,
-          'error': 404,
-          'message': 'resource not found'
-      }), 404
 
-  @app.errorhandler(422)
-  def unprocessable(error):
-      return jsonify({
-          'success': False,
-          'error': 422,
-          'message': 'unprocessable'
-      }), 422
+    @app.errorhandler(404)
+    def not_found(error):
+        return jsonify({
+            'success': False,
+            'error': 404,
+            'message': 'resource not found'
+        }), 404
 
-  @app.errorhandler(400)
-  def bad_request(error):
-      return jsonify({
-          'success': False,
-          'error': 400,
-          'message': 'bad request'
-      }), 400
+    @app.errorhandler(422)
+    def unprocessable(error):
+        return jsonify({
+            'success': False,
+            'error': 422,
+            'message': 'unprocessable'
+        }), 422
 
-  @app.errorhandler(405)
-  def not_allowed(error):
-      return jsonify({
-          'success': False,
-          'error': 405,
-          'message': 'method not allowed'
-      }), 405
+    @app.errorhandler(400)
+    def bad_request(error):
+        return jsonify({
+            'success': False,
+            'error': 400,
+            'message': 'bad request'
+        }), 400
 
-  @app.errorhandler(500)
-  def server_error(error):
-      return jsonify({
-        'success': False,
-        'error': 500,
-        'message': 'Internal server error',
-      }), 500
+    @app.errorhandler(405)
+    def not_allowed(error):
+        return jsonify({
+            'success': False,
+            'error': 405,
+            'message': 'method not allowed'
+        }), 405
+
+    @app.errorhandler(500)
+    def server_error(error):
+        return jsonify({
+            'success': False,
+            'error': 500,
+            'message': 'Internal server error',
+        }), 500
 
 
 
-  return app
+    return app
 
 APP = create_app()
 
