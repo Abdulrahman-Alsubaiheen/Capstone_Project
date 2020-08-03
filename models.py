@@ -21,14 +21,14 @@ db = SQLAlchemy()
 
 '''
 setup_db(app)
-    binds a flask application and a SQLAlchemy service
+binds a flask application and a SQLAlchemy service
 '''
 def setup_db(app, database_path=database_path):
     app.config["SQLALCHEMY_DATABASE_URI"] = database_path
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.app = app
     db.init_app(app)
-#    db.create_all()
+    # db.create_all()
     migrate = Migrate(app, db)
 
 #----------------------------------------------------------------------------#
@@ -45,7 +45,8 @@ class movies_actors(db.Model):
     actor = db.relationship("Actor", back_populates="movies")
     movie = db.relationship("Movie", back_populates="actors")
 
-   
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
 class Movie(db.Model):
     __tablename__ = 'movie'
 
@@ -55,6 +56,29 @@ class Movie(db.Model):
 
     actors = db.relationship("movies_actors", back_populates="movie")
 
+    def __init__(self, title, release_date):
+        self.title = title
+        self.release_date = release_date
+
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+    def format(self):
+        return {
+        'id': self.id,
+        'title': self.title ,
+        'release_date': self.release_date
+        }
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
 class Actor(db.Model):
     __tablename__ = 'actor'
@@ -65,4 +89,28 @@ class Actor(db.Model):
     gender = db.Column(db.String(120) , nullable=False)
 
     movies = db.relationship("movies_actors", back_populates="actor")
+
+    def __init__(self, name, age, gender):
+        self.name = name
+        self.age = age
+        self.gender = gender
+
+    def insert(self):
+        db.session.add(self)
+        db.session.commit()
+    
+    def update(self):
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+    def format(self):
+        return {
+        'id': self.id,
+        'name': self.name ,
+        'age': self.age ,
+        'gender': self.gender
+        }
 
