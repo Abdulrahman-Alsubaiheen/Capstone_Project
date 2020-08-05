@@ -7,6 +7,7 @@ from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from models import *
+from auth import AuthError, requires_auth
 
 #----------------------------------------------------------------------------#
 # App Config
@@ -42,6 +43,7 @@ def create_app(test_config=None):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
     @app.route('/actors', methods=['GET'])
+    @requires_auth('get:actors')
     def retrive_actors():
 
         all_actors = Actor.query.order_by(Actor.id).all()
@@ -60,6 +62,7 @@ def create_app(test_config=None):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
     @app.route('/actors' , methods=['POST'])
+    @requires_auth('post:actors')
     def add_actor():
 
         body = request.get_json()
@@ -83,6 +86,7 @@ def create_app(test_config=None):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
     @app.route('/actors/<int:actor_id>' , methods=['PATCH'])
+    @requires_auth('patch:actors')
     def edit_actor(actor_id):
 
         actor = Actor.query.get(actor_id)
@@ -114,6 +118,7 @@ def create_app(test_config=None):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
     @app.route('/actors/<int:actor_id>', methods=['DELETE'])
+    @requires_auth('delete:actors')
     def delete_actor(actor_id):
 
         actor = Actor.query.get(actor_id)
@@ -131,6 +136,7 @@ def create_app(test_config=None):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
     @app.route('/movies', methods=['GET'])
+    @requires_auth('get:movies')
     def retrive_movies():
 
         all_movies = Movie.query.order_by(Movie.id).all()
@@ -149,6 +155,7 @@ def create_app(test_config=None):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
     @app.route('/movies', methods=['POST'])
+    @requires_auth('post:movies')
     def add_movie():
 
         body = request.get_json()
@@ -171,6 +178,7 @@ def create_app(test_config=None):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
     @app.route('/movies/<int:movie_id>' , methods=['PATCH'])
+    @requires_auth('patch:movies')
     def edit_movie(movie_id):
 
         movie = Movie.query.get(movie_id)
@@ -199,6 +207,7 @@ def create_app(test_config=None):
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
     @app.route('/movies/<int:movie_id>', methods=['DELETE'])
+    @requires_auth('delete:movies')
     def delete_movie(movie_id):
 
         movie = Movie.query.get(movie_id)
