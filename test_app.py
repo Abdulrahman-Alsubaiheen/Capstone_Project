@@ -5,12 +5,12 @@ from flask_sqlalchemy import SQLAlchemy
 
 from app import create_app
 from models import *
-from auth import AuthError, requires_auth
 
 # access tokens:
 Casting_Assistant = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IklIWEVFV1l3dF91bEdKTnhCWE5EcyJ9.eyJpc3MiOiJodHRwczovL2Fib3htc2EzZC51cy5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWVlMmVkYWVmNDVlODEwYmEyYjc2NWQ2IiwiYXVkIjoiY2Fwc3RvbmUiLCJpYXQiOjE1OTY2NzUwNDMsImV4cCI6MTU5Njc2MTQ0MywiYXpwIjoiZVhPS3pDWHBDTmtReG5BUTVReDRHdllSVjdNb3JVTGgiLCJzY29wZSI6IiIsInBlcm1pc3Npb25zIjpbImdldDphY3RvcnMiLCJnZXQ6bW92aWVzIl19.bDS1RoOz4MWa8rlyqpJ6eGRXRegD-FzEvwrMMhsK6dxZ9v3qUZRRev99DWe0MZTD78vh05t8DHXjEFA5Vf3XYYzfB6Q4r-g7cJSveayD9J0LXPSahuzOLD78Xw8mC9SKdZKG4kjU3U0nR4E70q5fY0ySuqRq0Hn9teaSCo-JUPmYVtUbPqHcCW99dVJJgVQ-AUzrycdUBPr6VDLmFQ0y2yaYekxuESwirS8JCgWA9y7_BXFDkPR3WWOcFs3CPPsXFCyWtTdSvywNI6mOnYfjS_mdEZpBI6nSeMMh4VVkucuUsfnvbZ5RPLVW7AXnvqgBFuAMz9iZWNlkOAmNiI_gGg"
 Casting_Director = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IklIWEVFV1l3dF91bEdKTnhCWE5EcyJ9.eyJpc3MiOiJodHRwczovL2Fib3htc2EzZC51cy5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWYyOWZhN2QzMmNlYTMwMjIxMTQ1YjRiIiwiYXVkIjoiY2Fwc3RvbmUiLCJpYXQiOjE1OTY2NzUxMTksImV4cCI6MTU5Njc2MTUxOSwiYXpwIjoiZVhPS3pDWHBDTmtReG5BUTVReDRHdllSVjdNb3JVTGgiLCJzY29wZSI6IiIsInBlcm1pc3Npb25zIjpbImRlbGV0ZTphY3RvcnMiLCJnZXQ6YWN0b3JzIiwiZ2V0Om1vdmllcyIsInBhdGNoOmFjdG9ycyIsInBhdGNoOm1vdmllcyIsInBvc3Q6YWN0b3JzIl19.fyuIx1ojivQoMqk8IIOgi9LWHijIfYdyZ2WnoaWghYiDj-8SydMIpF07HqgmKnYwA3HxfnciNEVg2FjwUspcixJKGiQOwL06G54fUY54yoCqzIs35PacHVL3MmPn2WqXzhpjs5FUYxXIueTER71oNOX66dphoHPUKt3_Ld3jUANYZCkdNkyBzdUtmshWVg8Ih-KcmA2ASz-1k4xomhrG8ba0XgiSQQWLKJK4vDbt4V9ewaLCgbLRzRE0eva4LJ9Sp6jX763DLHd2g0Z048_dWrNRQBCiLOVW7Z3wMQlPzWGVYkIt5kTEvNxrIsqtJyMmiW5pbe1w-YslYL28r_Zk9Q"
 Executive_Producer = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IklIWEVFV1l3dF91bEdKTnhCWE5EcyJ9.eyJpc3MiOiJodHRwczovL2Fib3htc2EzZC51cy5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWVlYjA5ZWIzNTdjMTUwYjZjMjJlYzE3IiwiYXVkIjoiY2Fwc3RvbmUiLCJpYXQiOjE1OTY2NzUxNTgsImV4cCI6MTU5Njc2MTU1OCwiYXpwIjoiZVhPS3pDWHBDTmtReG5BUTVReDRHdllSVjdNb3JVTGgiLCJzY29wZSI6IiIsInBlcm1pc3Npb25zIjpbImRlbGV0ZTphY3RvcnMiLCJkZWxldGU6bW92aWVzIiwiZ2V0OmFjdG9ycyIsImdldDptb3ZpZXMiLCJwYXRjaDphY3RvcnMiLCJwYXRjaDptb3ZpZXMiLCJwb3N0OmFjdG9ycyIsInBvc3Q6bW92aWVzIl19.ud2zF8yTI5WFNyHr7M9GLCkifFglYLvlHIPYjaEWsUkRknLPh2bH6AuoCLw3VwvdzN-oeNq4jr3qZVw9x-2PsyUMNeMiOz_IcErMNlKJVoW1BO8M-e4uKkRiuIQg64Ak2qKIAdTU1kLdN5AfuYQaZLWavfJWX-6_NNpuGgqqqG39fEl4AxzQ4bjieq6Pk4PDYnthd19Lkkml-pTP-nFU46s9B0vZiHuGN8Svl9RWHguh2nhuZrRIR4iexEpTx_NC1_2FDDdQDXoUFFizVKFjyn_iVoWo9JR9bIB8sIZB0I9ROwL1dkX1EzKqkjrCb7lM4QO4-5v-pa6NITb7pw_7Zg"
+
 
 class CapstoneTestCase(unittest.TestCase):
     """This class represents the trivia test case"""
@@ -49,7 +49,7 @@ class CapstoneTestCase(unittest.TestCase):
             self.db.init_app(self.app)
             # create all tables
             self.db.create_all()
-
+            
     # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ #
 
     def tearDown(self): # run after each test
@@ -215,17 +215,6 @@ class CapstoneTestCase(unittest.TestCase):
 
     # ________________________________________________________________ #
 
-    def test_delete_actor_for_Casting_Director(self): # must change the id every time runing the test
-        res = self.client().delete('/actors/1' , headers={"Authorization": 'bearer '+Casting_Director})
-        data = json.loads(res.data)
-
-        actor = Actor.query.filter(Actor.id == 1).one_or_none()
-
-        self.assertEqual(res.status_code, 200)
-        self.assertEqual(data['success'], True)
-
-    # ________________________________________________________________ #
-
     def test_delete_movie_for_Casting_Director(self): # must change the id every time runing the test
         res = self.client().delete('/movies/1' , headers={"Authorization": 'bearer '+Casting_Director})
         data = json.loads(res.data)
@@ -282,18 +271,7 @@ class CapstoneTestCase(unittest.TestCase):
         res = self.client().patch('/actors/1', json={'age': 18} , headers={"Authorization": 'bearer '+Executive_Producer})
         data = json.loads(res.data)
 
-        actor = Actor.query.filter(Actor.id == 1).one_or_none()
-
-        self.assertEqual(res.status_code, 200)
-        self.assertEqual(data['success'], True)
-
-    # ________________________________________________________________ #
-
-    def test_update_movie_title_for_Executive_Producer(self):      
-        res = self.client().patch('/movies/1', json={'title': 'title is changed'} , headers={"Authorization": 'bearer '+Executive_Producer})
-        data = json.loads(res.data)
-
-        movie = Movie.query.filter(Movie.id == 1).one_or_none()
+        #actor = Actor.query.filter(Actor.id == 1).one_or_none()
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
@@ -311,11 +289,22 @@ class CapstoneTestCase(unittest.TestCase):
 
     # ________________________________________________________________ #
 
+    def test_update_movie_title_for_Executive_Producer(self):      
+        res = self.client().patch('/movies/1', json={'title': 'title is changed'} , headers={"Authorization": 'bearer '+Executive_Producer})
+        data = json.loads(res.data)
+
+        #movie = Movie.query.filter(Movie.id == 2).one_or_none()
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+
+    # ________________________________________________________________ #
+
     def test_delete_movie_for_Executive_Producer(self): # must change the id every time runing the test
         res = self.client().delete('/movies/1' , headers={"Authorization": 'bearer '+Executive_Producer})
         data = json.loads(res.data)
 
-        #movie = Movie.query.filter(Movie.id == 1).one_or_none()
+        #movie = Movie.query.filter(Movie.id == 2).one_or_none()
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
