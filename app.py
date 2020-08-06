@@ -88,7 +88,6 @@ def create_app(test_config=None):
         except BaseException:
             abort(422)
 
-
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
     @app.route('/actors/<int:actor_id>', methods=['PATCH'])
@@ -125,7 +124,7 @@ def create_app(test_config=None):
 
         except BaseException:
             abort(422)
-       
+
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
     @app.route('/actors/<int:actor_id>', methods=['DELETE'])
@@ -190,7 +189,6 @@ def create_app(test_config=None):
 
         except BaseException:
             abort(422)
-
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
