@@ -13,28 +13,30 @@ from auth import AuthError, requires_auth
 # App Config
 #----------------------------------------------------------------------------#
 
+
 def create_app(test_config=None):
 
     # create and configure the app
     app = Flask(__name__)
-    setup_db(app)  
+    setup_db(app)
     cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-    # CORS Headers 
+    # CORS Headers
     @app.after_request
     def after_request(response):
-        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,true')
-        response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+        response.headers.add(
+            'Access-Control-Allow-Headers',
+            'Content-Type,Authorization,true')
+        response.headers.add(
+            'Access-Control-Allow-Methods',
+            'GET,PUT,POST,DELETE,OPTIONS')
         return response
-
-
 
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ endpoints ~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
-
     @app.route('/', methods=['GET'])
     def home():
-        
+
         return jsonify({
             'success': True,
             'Wellcome': "Wellcome",
@@ -61,7 +63,7 @@ def create_app(test_config=None):
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
-    @app.route('/actors' , methods=['POST'])
+    @app.route('/actors', methods=['POST'])
     @requires_auth('post:actors')
     def add_actor(payload):
 
@@ -71,19 +73,25 @@ def create_app(test_config=None):
         new_age = body.get('age', None)
         new_gender = body.get('gender', None)
 
-        actor = Actor(name=new_name ,age=new_age , gender=new_gender)
-        actor.insert()
+        try:
 
-        all_actors = Actor.query.order_by(Actor.id).all()
-        formatted_actors = [Actor.format() for Actor in all_actors]
+            actor = Actor(name=new_name, age=new_age, gender=new_gender)
+            actor.insert()
 
-        return jsonify({
-            'success': True,
-        })
+            all_actors = Actor.query.order_by(Actor.id).all()
+            formatted_actors = [Actor.format() for Actor in all_actors]
+
+            return jsonify({
+                'success': True,
+            })
+
+        except BaseException:
+            abort(422)
+
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
-    @app.route('/actors/<int:actor_id>' , methods=['PATCH'])
+    @app.route('/actors/<int:actor_id>', methods=['PATCH'])
     @requires_auth('patch:actors')
     def edit_actor(payload, actor_id):
 
@@ -98,20 +106,26 @@ def create_app(test_config=None):
         new_age = body.get('age', None)
         new_gender = body.get('gender', None)
 
-        if new_name is not None:
-            actor.name = new_name
+        try:
 
-        if new_age is not None:
-            actor.age = new_age
-            
-        if new_gender is not None:
-            actor.gender = new_gender
+            if new_name is not None:
+                actor.name = new_name
 
-        actor.update()
+            if new_age is not None:
+                actor.age = new_age
 
-        return jsonify({
-            'success': True,
-        })
+            if new_gender is not None:
+                actor.gender = new_gender
+
+            actor.update()
+
+            return jsonify({
+                'success': True,
+            })
+
+        except BaseException:
+            abort(422)
+       
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
     @app.route('/actors/<int:actor_id>', methods=['DELETE'])
@@ -123,7 +137,11 @@ def create_app(test_config=None):
         if actor is None:
             abort(404)
 
-        actor.delete()
+        try:
+            actor.delete()
+
+        except BaseException:
+            abort(422)
 
         return jsonify({
             'success': True,
@@ -159,19 +177,24 @@ def create_app(test_config=None):
         new_title = body.get('title', None)
         new_release_date = body.get('release_date', None)
 
-        movie = Movie(title=new_title ,release_date=new_release_date)
-        movie.insert()
+        try:
+            movie = Movie(title=new_title, release_date=new_release_date)
+            movie.insert()
 
-        all_movies = Movie.query.order_by(Movie.id).all()
-        formatted_movies = [Movie.format() for Movie in all_movies]
-        
-        return jsonify({
-            'success': True,
-        })
+            all_movies = Movie.query.order_by(Movie.id).all()
+            formatted_movies = [Movie.format() for Movie in all_movies]
+
+            return jsonify({
+                'success': True,
+            })
+
+        except BaseException:
+            abort(422)
+
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
-    @app.route('/movies/<int:movie_id>' , methods=['PATCH'])
+    @app.route('/movies/<int:movie_id>', methods=['PATCH'])
     @requires_auth('patch:movies')
     def edit_movie(payload, movie_id):
 
@@ -185,17 +208,21 @@ def create_app(test_config=None):
         new_title = body.get('title', None)
         new_release_date = body.get('release_date', None)
 
-        if new_title is not None:
-            movie.title = new_title
+        try:
+            if new_title is not None:
+                movie.title = new_title
 
-        if new_release_date is not None:
-            movie.release_date = new_release_date
-            
-        movie.update()
+            if new_release_date is not None:
+                movie.release_date = new_release_date
 
-        return jsonify({
-            'success': True,
-        })
+            movie.update()
+
+            return jsonify({
+                'success': True,
+            })
+
+        except BaseException:
+            abort(422)
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -208,16 +235,17 @@ def create_app(test_config=None):
         if movie is None:
             abort(404)
 
-        movie.delete()
+        try:
+            movie.delete()
 
-        return jsonify({
-            'success': True,
-        })
+            return jsonify({
+                'success': True,
+            })
 
-
+        except BaseException:
+            abort(422)
 
   # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Error Handlers ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
-
 
     @app.errorhandler(404)
     def not_found(error):
@@ -265,8 +293,8 @@ def create_app(test_config=None):
         response.status_code = ex.status_code
         return response
 
-
     return app
+
 
 APP = create_app()
 
