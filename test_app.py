@@ -152,8 +152,188 @@ class CapstoneTestCase(unittest.TestCase):
         self.assertEqual(data['description'], 'Permission not found.')
 
 
+    #----------------------------------------------------------------------------#
+    # Test for Casting Director Role
+    #----------------------------------------------------------------------------#
+
+    def test_get_actors_for_Casting_Director(self):
+        res = self.client().get('/actors' , headers={"Authorization": 'bearer '+Casting_Director})
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['total_Actors'], len(data['Actors']))
+
+    #  ________________________________________________________________ #
+
+    def test_get_movies_for_Casting_Director(self):
+        res = self.client().get('/movies' , headers={"Authorization": 'bearer '+Casting_Director})
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['total_Movies'], len(data['Movies']))
 
 
+    # ________________________________________________________________ #
+
+    def test_add_new_actor_for_Casting_Director(self):
+        # json=self.new_actor ( that i create up in the setup )
+        res = self.client().post('/actors', json=self.new_actor , headers={"Authorization": 'bearer '+Casting_Director})
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['total_Actors'], len(data['Actors']))
+
+    # ________________________________________________________________ #
+
+    def test_add_new_movie_for_Casting_Director(self):
+        # json=self.new_actor ( that i create up in the setup )
+        res = self.client().post('/movies', json=self.new_movie , headers={"Authorization": 'bearer '+Casting_Director})
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 403)
+        self.assertEqual(data['code'], 'unauthorized')
+        self.assertEqual(data['description'], 'Permission not found.')
+
+    # ________________________________________________________________ #
+
+    def test_update_actor_age_for_Casting_Director(self):      
+        res = self.client().patch('/actors/1', json={'age': 18} , headers={"Authorization": 'bearer '+Casting_Director})
+        data = json.loads(res.data)
+
+        actor = Actor.query.filter(Actor.id == 1).one_or_none()
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertEqual(actor.format()['age'], 18)
+
+    # ________________________________________________________________ #
+
+    def test_update_movie_title_for_Casting_Director(self):      
+        res = self.client().patch('/movies/1', json={'title': 'title is changed'} , headers={"Authorization": 'bearer '+Casting_Director})
+        data = json.loads(res.data)
+
+        movie = Movie.query.filter(Movie.id == 1).one_or_none()
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertEqual(movie.format()['title'], 'title is changed')
+
+    # ________________________________________________________________ #
+
+    def test_delete_actor_for_Casting_Director(self): # must change the id every time runing the test
+        res = self.client().delete('/actors/1' , headers={"Authorization": 'bearer '+Casting_Director})
+        data = json.loads(res.data)
+
+        actor = Actor.query.filter(Actor.id == 1).one_or_none()
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+
+    # ________________________________________________________________ #
+
+    def test_delete_movie_for_Casting_Director(self): # must change the id every time runing the test
+        res = self.client().delete('/movies/1' , headers={"Authorization": 'bearer '+Casting_Director})
+        data = json.loads(res.data)
+
+        #movie = Movie.query.filter(Movie.id == 1).one_or_none()
+
+        self.assertEqual(res.status_code, 403)
+        self.assertEqual(data['code'], 'unauthorized')
+        self.assertEqual(data['description'], 'Permission not found.')
+
+    #----------------------------------------------------------------------------#
+    # Test for Executive Producer Role
+    #----------------------------------------------------------------------------#
+
+    def test_get_actors_for_Executive_Producer(self):
+        res = self.client().get('/actors' , headers={"Authorization": 'bearer '+Executive_Producer})
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['total_Actors'], len(data['Actors']))
+
+    #  ________________________________________________________________ #
+
+    def test_get_movies_for_Executive_Producer(self):
+        res = self.client().get('/movies' , headers={"Authorization": 'bearer '+Executive_Producer})
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['total_Movies'], len(data['Movies']))
+
+
+    # ________________________________________________________________ #
+
+    def test_add_new_actor_for_Executive_Producer(self):
+        # json=self.new_actor ( that i create up in the setup )
+        res = self.client().post('/actors', json=self.new_actor , headers={"Authorization": 'bearer '+Executive_Producer})
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['total_Actors'], len(data['Actors']))
+
+    # ________________________________________________________________ #
+
+    def test_add_new_movie_for_Executive_Producer(self):
+        # json=self.new_actor ( that i create up in the setup )
+        res = self.client().post('/movies', json=self.new_movie , headers={"Authorization": 'bearer '+Executive_Producer})
+        data = json.loads(res.data)
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['total_movies'], len(data['movies']))
+
+    # ________________________________________________________________ #
+
+    def test_update_actor_age_for_Executive_Producer(self):      
+        res = self.client().patch('/actors/1', json={'age': 18} , headers={"Authorization": 'bearer '+Executive_Producer})
+        data = json.loads(res.data)
+
+        actor = Actor.query.filter(Actor.id == 1).one_or_none()
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertEqual(actor.format()['age'], 18)
+
+    # ________________________________________________________________ #
+
+    def test_update_movie_title_for_Executive_Producer(self):      
+        res = self.client().patch('/movies/1', json={'title': 'title is changed'} , headers={"Authorization": 'bearer '+Executive_Producer})
+        data = json.loads(res.data)
+
+        movie = Movie.query.filter(Movie.id == 1).one_or_none()
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertEqual(movie.format()['title'], 'title is changed')
+
+    # ________________________________________________________________ #
+
+    def test_delete_actor_for_Executive_Producer(self): # must change the id every time runing the test
+        res = self.client().delete('/actors/4' , headers={"Authorization": 'bearer '+Executive_Producer})
+        data = json.loads(res.data)
+
+        #actor = Actor.query.filter(Actor.id == 1).one_or_none()
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
+
+    # ________________________________________________________________ #
+
+    def test_delete_movie_for_Executive_Producer(self): # must change the id every time runing the test
+        res = self.client().delete('/movies/1' , headers={"Authorization": 'bearer '+Executive_Producer})
+        data = json.loads(res.data)
+
+        #movie = Movie.query.filter(Movie.id == 1).one_or_none()
+
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['success'], True)
 
 
 
