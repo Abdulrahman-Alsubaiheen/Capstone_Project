@@ -79,8 +79,6 @@ def create_app(test_config=None):
 
         return jsonify({
             'success': True,
-            'Actors': formatted_actors,
-            'total_Actors': len(formatted_actors),
         })
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
@@ -113,7 +111,6 @@ def create_app(test_config=None):
 
         return jsonify({
             'success': True,
-            'Actor': actor.format()
         })
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -130,7 +127,6 @@ def create_app(test_config=None):
 
         return jsonify({
             'success': True,
-            'Deleted_Actor': actor.format()
         })
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
@@ -171,8 +167,6 @@ def create_app(test_config=None):
         
         return jsonify({
             'success': True,
-            'movies': formatted_movies,
-            'total_movies': len(formatted_movies),
         })
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
@@ -201,7 +195,6 @@ def create_app(test_config=None):
 
         return jsonify({
             'success': True,
-            'Movie': movie.format()
         })
 
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
@@ -219,7 +212,6 @@ def create_app(test_config=None):
 
         return jsonify({
             'success': True,
-            'Deleted_Movie': movie.format()
         })
 
 
