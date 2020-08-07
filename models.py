@@ -14,9 +14,11 @@ import json
 # App Config.
 #----------------------------------------------------------------------------#
 
-database_name = "capstone"
-database_path = "postgres://{}:{}@{}/{}".format(
-    'postgres', 'd7oom11', 'localhost:5432', database_name)
+database_path = os.environ['DATABASE_URL']
+
+# database_name = "capstone"
+# database_path = "postgres://{}:{}@{}/{}".format(
+#     'postgres', 'd7oom11', 'localhost:5432', database_name)
 
 db = SQLAlchemy()
 
@@ -32,7 +34,6 @@ def setup_db(app, database_path=database_path):
     db.app = app
     db.init_app(app)
     # db.create_all()
-    migrate = Migrate(app, db)
 
 #----------------------------------------------------------------------------#
 # Models.
