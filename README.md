@@ -5,7 +5,7 @@ Casting-Agency is the final project in Udacity Nanodgree. The Casting Agency mod
 
 #### heroku Link
 
-....
+https://casting-agency-project-fsnd.herokuapp.com/
 
 ---
 
@@ -48,14 +48,10 @@ first ensure you are working using your created virtual environment.
 To run the server, execute:
 
 ```bash
-export FLASK_APP=flaskr
+export FLASK_APP=app
 export FLASK_ENV=development
 flask run
 ```
-
-Setting the `FLASK_ENV` variable to `development` will detect file changes and restart the server automatically.
-
-Setting the `FLASK_APP` variable to `flaskr` directs flask to use the `flaskr` directory and the `__init__.py` file to find the application. 
 
 ---
 
@@ -233,9 +229,6 @@ python test_app.py
 
 #### Postman
 
-the test endpoint in localhost :
-http://127.0.0.1:5000/
+the test endpoint in Heroku :-
 
-1. download Postmant.
-2. Import Casting-Agency.postman_collection.json .
-3. run the collection.
+Import Casting-Agency.postman_collection.json , then run the test
