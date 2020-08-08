@@ -58,9 +58,9 @@ class CapstoneTestCase(unittest.TestCase):
 
     # every test method must start with ( test_........(self) )
 
-    #----------------------------------------------------------------------------#
+    # ---------------------------------------------------------------#
     # Test for Casting Assistant Role
-    #----------------------------------------------------------------------------#
+    # ---------------------------------------------------------------#
 
     def test_get_actors_for_Casting_Assistant(self):
         res = self.client().get(
@@ -148,7 +148,7 @@ class CapstoneTestCase(unittest.TestCase):
                 Casting_Assistant})
         data = json.loads(res.data)
 
-        #actor = Actor.query.filter(Actor.id == 1).one_or_none()
+        # actor = Actor.query.filter(Actor.id == 1).one_or_none()
 
         self.assertEqual(res.status_code, 403)
         self.assertEqual(data['code'], 'unauthorized')
@@ -156,7 +156,7 @@ class CapstoneTestCase(unittest.TestCase):
 
     # ________________________________________________________________ #
 
-    def test_delete_actor(self):  # must change the id every time runing the test
+    def test_delete_actor(self):  # change the id every time runing the test
         res = self.client().delete(
             '/actors/1',
             headers={
@@ -164,7 +164,7 @@ class CapstoneTestCase(unittest.TestCase):
                 Casting_Assistant})
         data = json.loads(res.data)
 
-        #actor = Actor.query.filter(Actor.id == 1).one_or_none()
+        # actor = Actor.query.filter(Actor.id == 1).one_or_none()
 
         self.assertEqual(res.status_code, 403)
         self.assertEqual(data['code'], 'unauthorized')
@@ -172,7 +172,7 @@ class CapstoneTestCase(unittest.TestCase):
 
     # ________________________________________________________________ #
 
-    def test_delete_movie(self):  # must change the id every time runing the test
+    def test_delete_movie(self):  # change the id every time runing the test
         res = self.client().delete(
             '/movies/1',
             headers={
@@ -180,14 +180,14 @@ class CapstoneTestCase(unittest.TestCase):
                 Casting_Assistant})
         data = json.loads(res.data)
 
-        #movie = Movie.query.filter(Movie.id == 1).one_or_none()
+        # movie = Movie.query.filter(Movie.id == 1).one_or_none()
 
         self.assertEqual(res.status_code, 403)
         self.assertEqual(data['code'], 'unauthorized')
 
-    #----------------------------------------------------------------------------#
+    # -------------------------------------------------------------#
     # Test for Casting Director Role
-    #----------------------------------------------------------------------------#
+    # -------------------------------------------------------------#
 
     def test_get_actors_for_Casting_Director(self):
         res = self.client().get(
@@ -288,14 +288,14 @@ class CapstoneTestCase(unittest.TestCase):
                 Casting_Director})
         data = json.loads(res.data)
 
-        #movie = Movie.query.filter(Movie.id == 1).one_or_none()
+        # movie = Movie.query.filter(Movie.id == 1).one_or_none()
 
         self.assertEqual(res.status_code, 403)
         self.assertEqual(data['code'], 'unauthorized')
 
-    #----------------------------------------------------------------------------#
+    # ---------------------------------------------------------------#
     # Test for Executive Producer Role
-    #----------------------------------------------------------------------------#
+    # ---------------------------------------------------------------#
 
     def test_get_actors_for_Executive_Producer(self):
         res = self.client().get(
@@ -363,7 +363,7 @@ class CapstoneTestCase(unittest.TestCase):
                 Executive_Producer})
         data = json.loads(res.data)
 
-        #actor = Actor.query.filter(Actor.id == 1).one_or_none()
+        # actor = Actor.query.filter(Actor.id == 1).one_or_none()
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
@@ -379,7 +379,7 @@ class CapstoneTestCase(unittest.TestCase):
                 Executive_Producer})
         data = json.loads(res.data)
 
-        #actor = Actor.query.filter(Actor.id == 1).one_or_none()
+        # actor = Actor.query.filter(Actor.id == 1).one_or_none()
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
@@ -396,7 +396,7 @@ class CapstoneTestCase(unittest.TestCase):
                 Executive_Producer})
         data = json.loads(res.data)
 
-        #movie = Movie.query.filter(Movie.id == 2).one_or_none()
+        # movie = Movie.query.filter(Movie.id == 2).one_or_none()
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
@@ -412,7 +412,7 @@ class CapstoneTestCase(unittest.TestCase):
                 Executive_Producer})
         data = json.loads(res.data)
 
-        #movie = Movie.query.filter(Movie.id == 2).one_or_none()
+        # movie = Movie.query.filter(Movie.id == 2).one_or_none()
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
