@@ -57,9 +57,15 @@ flask run
 
 ## API Reference
 
-### Getting Started
+### Authentication
 
-- Authentication: This app has 3 Roles. Each has his own token which are provided in setup.sh file. 
+Based on the specific role you would like to test for, each of the roles has a jwt token that is available in the setup.sh file in the parent directory of this repository.
+
+You will need to pass it as an Authorization header in this format
+```
+Authorization: "Bearer {access_token}"
+```
+This app has 3 Roles. Each has his own token which are provided in setup.sh file.
 
 ### Roles
 
@@ -101,6 +107,7 @@ Errors are returned as JSON objects in the following format:
         - Fetch all Actor information
         - Request Arguments: None
         - Returns: JSON response containing all actors information, request status and the number of actors. 
+    - Sample : curl https://casting-agency-project-fsnd.herokuapp.com/actors
         ```
         {
         "Actors": [
@@ -123,6 +130,7 @@ Errors are returned as JSON objects in the following format:
         - Request Arguments: None
         - Request Body: Must include name(type str), gender(type str), age(type int)
         - Returns: Success value.
+    - Sample : curl https://casting-agency-project-fsnd.herokuapp.com/actors -X POST -H "Content-Type: application/json" -d '{ "name": "actor 6", "age": 19, "gender": "F" }'
         ```
         {
             "success": true,
@@ -135,6 +143,7 @@ Errors are returned as JSON objects in the following format:
         - Request Arguments: actors_id
         - Request Body: name(type str), gender(type str) or age(type int)
         - Returns: Success value.
+    - Sample : curl https://casting-agency-project-fsnd.herokuapp.com/actors/3 -X PATCH -H "Content-Type: application/json" -d '{"gender": "F" }'
         ```
         {
             "success": true,
@@ -146,6 +155,7 @@ Errors are returned as JSON objects in the following format:
         - Deletes the actor that has given
         - Request Arguments: actors_id
         - Returns: Success value. 
+    - Sample : curl https://casting-agency-project-fsnd.herokuapp.com//movies/3 -X DELETE -H "Content-Type: application/json"
         ```
         {
             "success": true,
@@ -160,6 +170,7 @@ Errors are returned as JSON objects in the following format:
         - Fetch all Movies information
         - Request Arguments: None
         - Returns: JSON response containing all movies information, request status and the number of movies. 
+    - Sample : curl https://casting-agency-project-fsnd.herokuapp.com/movies
         ```
         {
         "Movies": [
@@ -180,6 +191,7 @@ Errors are returned as JSON objects in the following format:
         - Request Arguments: None
         - Request Body: Must include title(type str), release_date(type datetime)
         - Returns: Success value.
+    - Sample : curl https://casting-agency-project-fsnd.herokuapp.com/movies -X POST -H "Content-Type: application/json" -d '{ "title": "movie 8", "release_date": "2022-01-20" }'
         ```
         {
             "success": true,
@@ -192,6 +204,7 @@ Errors are returned as JSON objects in the following format:
         - Request Arguments: movies_id
         - Request Body: title(type str), release_date(type datetime
         - Returns: Success value.
+    - Sample : curl https://casting-agency-project-fsnd.herokuapp.com/movies/1 -X PATCH -H "Content-Type: application/json" -d '{ "title": "edit movie"}'
         ```
         {
             "success": true,
@@ -202,7 +215,8 @@ Errors are returned as JSON objects in the following format:
     - General:
         - Deletes the movie that has given
         - Request Arguments: movie_id
-        - Returns: Success value. 
+        - Returns: Success value.
+    - Sample : curl https://casting-agency-project-fsnd.herokuapp.com/movie/3 -X DELETE -H "Content-Type: application/json"
         ```
         {
             "success": true,
