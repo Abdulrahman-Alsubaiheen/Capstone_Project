@@ -1,3 +1,4 @@
+import os
 import json
 from flask import request, _request_ctx_stack, abort
 from functools import wraps
@@ -5,9 +6,9 @@ from jose import jwt
 from urllib.request import urlopen
 
 
-AUTH0_DOMAIN = 'aboxmsa3d.us.auth0.com'
+AUTH0_DOMAIN = os.environ['AUTH0_DOMAIN']
 ALGORITHMS = ['RS256']
-API_AUDIENCE = 'capstone'
+API_AUDIENCE = os.environ['API_AUDIENCE']
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~ AuthError Exception ~~~~~~~~~~~~~~~~~~~~~~~ #
 # AuthError Exception A standardized way to communicate auth failure modes
